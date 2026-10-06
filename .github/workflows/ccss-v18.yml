@@ -1,0 +1,29 @@
+name: CCSS v1.8 NOAA real-vessel validation
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ccss-v18.yml'
+      - 'ccss_v18/**'
+  workflow_dispatch:
+
+jobs:
+  run-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install numpy pandas requests
+      - name: Run real-vessel validation
+        run: python ccss_v18/run_v18_remote.py
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccss-v18-real-ais-results
+          path: v18_results/
+          if-no-files-found: error
+          retention-days: 7
