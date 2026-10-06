@@ -1,0 +1,34 @@
+name: CCSS v1.8 real AIS analysis
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ccss-v18-analyze.yml'
+      - 'ccss_v18/analyze_corrected_real_ais.py'
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install numpy pandas
+      - name: Download corrected AIS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ccss-v18-corrected-*
+          path: ais_clips
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          run-id: 37399928774
+      - name: Analyze real AIS commitments
+        run: python ccss_v18/analyze_corrected_real_ais.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ccss-v18-real-analysis
+          path: v18_real_results/
+          retention-days: 7
+          if-no-files-found: error
