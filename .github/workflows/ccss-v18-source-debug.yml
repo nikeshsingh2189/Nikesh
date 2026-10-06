@@ -1,0 +1,17 @@
+name: CCSS v1.8 source diagnostics
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ccss-v18-source-debug.yml'
+      - 'ccss_v18/debug_sources.sh'
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe public AIS sources
+        run: bash ccss_v18/debug_sources.sh
