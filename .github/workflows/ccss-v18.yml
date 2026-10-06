@@ -10,7 +10,7 @@ on:
 jobs:
   run-validation:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -19,11 +19,11 @@ jobs:
       - name: Install dependencies
         run: pip install numpy pandas requests
       - name: Run real-vessel validation
-        run: python ccss_v18/run_v18_remote.py
+        run: python ccss_v18/run_v18_remote_fast.py
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: ccss-v18-real-ais-results
-          path: v18_results/
+          name: ccss-v18-real-ais-results-fast
+          path: v18_fast_results/
           if-no-files-found: error
           retention-days: 7
