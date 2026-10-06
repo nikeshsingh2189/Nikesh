@@ -1,0 +1,40 @@
+name: CCSS v1.8 NOAA blob extraction
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ccss-v18-blob.yml'
+      - 'ccss_v18/download_blob_chunk.py'
+  workflow_dispatch:
+
+jobs:
+  extract:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {id: c01, start: '2024-03-14', end: '2024-03-20'}
+          - {id: c02, start: '2024-03-21', end: '2024-03-27'}
+          - {id: c03, start: '2024-03-28', end: '2024-04-03'}
+          - {id: c04, start: '2024-04-04', end: '2024-04-10'}
+          - {id: c05, start: '2024-04-11', end: '2024-04-17'}
+          - {id: c06, start: '2024-04-18', end: '2024-04-24'}
+          - {id: c07, start: '2024-04-25', end: '2024-05-01'}
+          - {id: c08, start: '2024-05-02', end: '2024-05-08'}
+          - {id: c09, start: '2024-05-09', end: '2024-05-11'}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install zstandard
+      - name: Stream NOAA daily files and retain Louisiana corridor
+        run: python ccss_v18/download_blob_chunk.py --start ${{ matrix.start }} --end ${{ matrix.end }} --out clips/${{ matrix.id }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ccss-v18-${{ matrix.id }}
+          path: clips/${{ matrix.id }}/
+          retention-days: 7
+          if-no-files-found: error
