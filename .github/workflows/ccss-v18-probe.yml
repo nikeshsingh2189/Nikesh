@@ -1,0 +1,25 @@
+name: CCSS v1.8 NOAA bbox probe
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ccss-v18-probe.yml'
+      - 'ccss_v18/probe_bbox_day.py'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install zstandard
+      - run: python ccss_v18/probe_bbox_day.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ccss-v18-bbox-probe
+          path: |
+            bbox_probe.csv
+            type_counts.json
+          retention-days: 7
