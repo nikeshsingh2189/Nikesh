@@ -1,0 +1,8 @@
+# Direct dependencies, pinned to the versions used for the stored results (Python 3.12.3).
+# pgmpy is NOT required: the Asia/Insurance/ALARM structures are shipped in data/networks/.
+numpy==2.4.4
+scipy==1.17.1
+pandas==3.0.2
+openpyxl==3.1.5
+pytest==9.1.1
+networkx==3.6.1
