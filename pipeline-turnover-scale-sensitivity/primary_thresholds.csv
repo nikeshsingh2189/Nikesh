@@ -1,0 +1,5 @@
+R,relaxed_threshold,exact_integer_threshold
+40,0.0000,0.0000
+60,0.0067,0.0182
+80,0.0052,0.0149
+100,0.0062,0.0161
